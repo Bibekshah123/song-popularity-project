@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Song Popularity Predictor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <section class="card">
+      <div class="header">
+        <h1>Song Popularity Predictor</h1>
+        <p>Enter Spotify audio features and predict the popularity score.</p>
+      </div>
+      <form id="predictionForm">
+        <h2>Core Audio Features</h2>
+        <div class="grid">
+          <label>Acousticness <input type="number" step="0.01" min="0" max="1" id="acousticness" value="0.18" required></label>
+          <label>Danceability <input type="number" step="0.01" min="0" max="1" id="danceability" value="0.72" required></label>
+          <label>Energy <input type="number" step="0.01" min="0" max="1" id="energy" value="0.81" required></label>
+          <label>Instrumentalness <input type="number" step="0.01" min="0" max="1" id="instrumentalness" value="0.02" required></label>
+          <label>Speechiness <input type="number" step="0.01" min="0" max="1" id="speechiness" value="0.07" required></label>
+          <label>Audio Valence <input type="number" step="0.01" min="0" max="1" id="audio_valence" value="0.64" required></label>
+        </div>
+        <h2>Rhythm and Loudness</h2>
+        <div class="grid">
+          <label>Tempo <input type="number" step="0.1" id="tempo" value="124.5" required></label>
+          <label>Loudness <input type="number" step="0.1" id="loudness" value="-5.8" required></label>
+          <label>Liveness <input type="number" step="0.01" min="0" max="1" id="liveness" value="0.12" required></label>
+          <label>Song Duration ms <input type="number" id="song_duration_ms" value="215000" required></label>
+        </div>
+        <h2>Musical Structure</h2>
+        <div class="grid">
+          <label>Key<select id="key"><option value="0">0-C</option><option value="1">1-C#</option><option value="2">2-D</option><option value="3">3-D#</option><option value="4">4-E</option><option value="5" selected>5-F</option><option value="6">6-F#</option><option value="7">7-G</option><option value="8">8-G#</option><option value="9">9-A</option><option value="10">10-A#</option><option value="11">11-B</option></select></label>
+          <label>Audio Mode<select id="audio_mode"><option value="0">Minor/0</option><option value="1" selected>Major/1</option></select></label>
+          <label>Time Signature<select id="time_signature"><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select></label>
+        </div>
+        <button type="submit" id="predictBtn">Predict Popularity</button>
+      </form>
+      <section id="result" class="result hidden">
+        <h2>Prediction Result</h2>
+        <p class="score">Predicted Popularity: <span id="scoreValue">--</span> / 100</p>
+        <p>Model Version: <span id="modelVersion">--</span></p>
+        <p>Latency: <span id="latency">--</span> ms</p>
+      </section>
+      <section id="errorBox" class="error hidden"></section>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+mlruns/
+mlartifacts/
+mlflow.db
+*.pkl
+data/processed/*
+data/reference/*
+reports/drift/*
+models/*
+logs/
+*.log
+.DS_Store

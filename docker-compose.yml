@@ -1,0 +1,76 @@
+version: "3.8"
+
+services:
+  # ── MariaDB ColumnStore Data Warehouse ──
+  mariadb:
+    image: mariadb:11.4
+    container_name: song_mariadb
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: root_password
+      MARIADB_DATABASE: song_popularity_db
+      MARIADB_USER: bibek
+      MARIADB_PASSWORD: bibek123
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis Intermediate Storage ──
+  redis:
+    image: redis:7-alpine
+    container_name: song_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── MLflow Experiment Tracking ──
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.12.1
+    container_name: song_mlflow
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlruns:/mlruns
+      - ./mlartifacts:/mlartifacts
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:///mlflow.db
+      --default-artifact-root /mlartifacts
+      --host 0.0.0.0
+      --port 5000
+
+  # ── FastAPI Backend ──
+  backend:
+    build:
+      context: .
+      dockerfile: app/backend/Dockerfile
+    container_name: song_fastapi_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+      - ./reports:/app/reports
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mlflow:
+        condition: service_started
+
+volumes:
+  mariadb_data:

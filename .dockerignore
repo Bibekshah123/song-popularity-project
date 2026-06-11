@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+venv/
+mlruns/
+mlartifacts/
+.git
+.gitignore
+notebooks/
+airflow-docker/
+*.log

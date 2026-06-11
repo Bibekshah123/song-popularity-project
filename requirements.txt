@@ -1,0 +1,16 @@
+pandas
+numpy
+scikit-learn
+xgboost
+mlflow
+sqlalchemy
+pymysql
+redis
+fastapi
+uvicorn[standard]
+pydantic
+joblib
+evidently
+pyarrow
+email-validator
+shap
