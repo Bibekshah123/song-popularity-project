@@ -7,8 +7,8 @@ from sqlalchemy import create_engine
 from config import DB_PATH, REPORT_DIR, REFERENCE_DIR
 
 try:
-    from evidently.report import Report
-    from evidently.metric_preset import DataDriftPreset
+    from evidently import Report
+    from evidently.presets import DataDriftPreset
     EVIDENTLY_AVAILABLE = True
 except Exception:
     EVIDENTLY_AVAILABLE = False
@@ -35,8 +35,8 @@ def main():
 
     if EVIDENTLY_AVAILABLE:
         report = Report(metrics=[DataDriftPreset()])
-        report.run(reference_data=reference, current_data=current)
-        report.save_html(str(output))
+        snapshot = report.run(reference_data=reference, current_data=current)
+        snapshot.save_html(str(output))
         print(f"Evidently AI drift report saved: {output}")
     else:
         summary = df.describe().to_html()

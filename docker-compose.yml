@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # ── MariaDB ColumnStore Data Warehouse ──
   mariadb:
@@ -7,7 +5,7 @@ services:
     container_name: song_mariadb
     restart: unless-stopped
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MARIADB_ROOT_PASSWORD: root_password
       MARIADB_DATABASE: song_popularity_db
@@ -71,6 +69,18 @@ services:
         condition: service_healthy
       mlflow:
         condition: service_started
+
+  # ── Frontend Prediction UI ──
+  frontend:
+    image: nginx:alpine
+    container_name: song_frontend
+    restart: unless-stopped
+    ports:
+      - "5500:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
 
 volumes:
   mariadb_data:
