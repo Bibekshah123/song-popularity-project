@@ -1,3 +1,4 @@
+import os
 import time
 import joblib
 import numpy as np
@@ -23,8 +24,8 @@ app.add_middleware(
 )
 
 # ── Load model and pipeline ──
-MODEL_PATH = "models/best_model.pkl"
-PIPELINE_PATH = "data/processed/preprocessing_pipeline.pkl"
+MODEL_PATH = os.environ.get("MODEL_PATH", "/project/models/best_model.pkl")
+PIPELINE_PATH = os.environ.get("PIPELINE_PATH", "/project/data/processed/preprocessing_pipeline.pkl")
 
 model = joblib.load(MODEL_PATH)
 pipeline = joblib.load(PIPELINE_PATH)

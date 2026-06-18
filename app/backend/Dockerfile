@@ -2,17 +2,14 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install system dependencies for MariaDB client
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc libmariadb-dev && \
+    apt-get install -y --no-install-recommends gcc && \
     rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+COPY requirements-backend.txt /app/requirements-backend.txt
+RUN pip install --no-cache-dir -r /app/requirements-backend.txt
 
-COPY app /app/app
-COPY models /app/models
-COPY data /app/data
+# Copy the full project so model/pipeline paths resolve correctly
+COPY . /app
 
-EXPOSE 8000
-CMD ["uvicorn", "app.backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

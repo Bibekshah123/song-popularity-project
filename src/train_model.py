@@ -10,7 +10,7 @@ import mlflow.sklearn
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
-from config import PROCESSED_DIR, MODEL_DIR
+from config import PROCESSED_DIR, MODEL_DIR, MLFLOW_TRACKING_URI
 from config import REDIS_HOST, REDIS_PORT, REDIS_DB
 
 try:
@@ -35,7 +35,7 @@ def main():
 
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
 
-    mlflow.set_tracking_uri("http://localhost:5000")
+    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     mlflow.set_experiment("song_popularity_regression")
 
     X_train, y_train = joblib.load(PROCESSED_DIR / "train.pkl")
@@ -44,11 +44,11 @@ def main():
 
     models = {
         "LinearRegression": LinearRegression(),
-        "RandomForestRegressor": RandomForestRegressor(n_estimators=200, random_state=42),
+        "RandomForestRegressor": RandomForestRegressor(n_estimators=50, max_depth=10, random_state=42),
     }
     if XGBOOST_AVAILABLE:
         models["XGBoostRegressor"] = XGBRegressor(
-            n_estimators=200, max_depth=5, learning_rate=0.05,
+            n_estimators=50, max_depth=3, learning_rate=0.1,
             subsample=0.8, colsample_bytree=0.8, random_state=42, objective="reg:squarederror",
         )
 
